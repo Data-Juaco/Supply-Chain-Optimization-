@@ -10,7 +10,7 @@ Se enfoca en medir indicadores clave de desempeño (**KPIs**) como nivel de serv
 /optim_supply_chain/
 │── optim_supply_chain.sql # Script SQL con cálculos de KPIs
 │── README.md # Documentación del proyecto
-│── /data/ # Carpeta opcional con datasets de ejemplo
+│── /data/ # Datasets de ejemplo
 
 
 ---
