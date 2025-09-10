@@ -1,67 +1,45 @@
--- Proyecto: Optimización de Cadena de Suministro
--- Descripción: KPIs base para análisis de nivel de servicio, inventario y costos logísticos
+# Optimización de Cadena de Suministro
 
-WITH pedidos AS (
-  SELECT
-    p.order_id,
-    p.center_id,
-    p.channel,
-    DATE(p.order_date) AS order_date,
-    DATE(p.delivery_date) AS delivery_date,
-    p.status,
-    p.units,
-    p.shipping_cost,
-    p.item_cost,
-    -- SLA esperado = entrega dentro de 48 horas (ejemplo)
-    CASE WHEN TIMESTAMP_DIFF(p.delivery_date, p.order_date, HOUR) <= 48 THEN 1 ELSE 0 END AS SLA_OK
-  FROM `dataset.orders` p
-),
+Este proyecto forma parte de mi portafolio como **Data Analyst** y tiene como objetivo analizar y optimizar la cadena de suministro a través de **SQL y Tableau**.  
+Se enfoca en medir indicadores clave de desempeño (**KPIs**) como nivel de servicio (SLA), costos logísticos, tiempos de ciclo e inventario.
 
-inventario AS (
-  SELECT
-    i.sku,
-    i.center_id,
-    AVG(i.stock_units) AS avg_stock,
-    SUM(i.units_sold) AS units_sold
-  FROM `dataset.inventory` i
-  GROUP BY 1,2
-),
+---
 
-kpi_pedidos AS (
-  SELECT
-    center_id,
-    channel,
-    FORMAT_DATE('%Y-%W', order_date) AS semana,
-    COUNT(order_id) AS total_pedidos,
-    SUM(units) AS total_unidades,
-    ROUND(SUM(SLA_OK)/COUNT(order_id)*100,2) AS SLA_pct,
-    ROUND(AVG(TIMESTAMP_DIFF(delivery_date, order_date, HOUR)),1) AS ciclo_promedio_hrs,
-    ROUND(SUM(shipping_cost)/COUNT(order_id),2) AS costo_log_unit
-  FROM pedidos
-  GROUP BY 1,2,3
-),
+## Estructura del repositorio
 
-kpi_inventario AS (
-  SELECT
-    center_id,
-    ROUND(SUM(units_sold)/NULLIF(AVG(avg_stock),0),2) AS rotacion_inventario
-  FROM inventario
-  GROUP BY 1
-)
+/optim_supply_chain/
+│── optim_supply_chain.sql # Script SQL con cálculos de KPIs
+│── README.md # Documentación del proyecto
+│── /data/ # Carpeta opcional con datasets de ejemplo
 
-SELECT 
-  k.center_id,
-  k.channel,
-  k.semana,
-  k.total_pedidos,
-  k.total_unidades,
-  k.SLA_pct,
-  k.ciclo_promedio_hrs,
-  k.costo_log_unit,
-  i.rotacion_inventario
-FROM kpi_pedidos k
-LEFT JOIN kpi_inventario i
-  ON k.center_id = i.center_id
-ORDER BY semana, center_id, channel;
+
+---
+
+## Descripción técnica
+
+El archivo **`optim_supply_chain.sql`** calcula los siguientes KPIs:
+
+- **% SLA Cumplido** → pedidos entregados dentro de 48 horas.  
+- **Tiempo de Ciclo Promedio** → horas entre orden y entrega.  
+- **Costo Logístico Unitario** → costo de despacho promedio por pedido.  
+- **Rotación de Inventario** → unidades vendidas vs stock promedio.  
+
+El query está diseñado para ejecutarse en **Google BigQuery**, pero puede adaptarse a otros motores SQL.
+
+---
+
+## Cómo ejecutar el SQL
+
+### En BigQuery (UI):
+1. Abre [Google BigQuery](https://console.cloud.google.com/bigquery).
+2. Crea un dataset (ejemplo: `supply_chain`).
+3. Copia y pega el contenido de `optim_supply_chain.sql`.
+4. Ajusta los nombres de tablas (`dataset.orders`, `dataset.inventory`) según tus datos.
+5. Ejecuta la consulta.
+
+### En terminal con `bq CLI`:
+```bash
+bq query --use_legacy_sql=false < optim_supply_chain.sql
+
 
 
