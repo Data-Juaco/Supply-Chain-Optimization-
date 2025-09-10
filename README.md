@@ -19,10 +19,10 @@ Se enfoca en medir indicadores clave de desempeño (**KPIs**) como nivel de serv
 
 El archivo **`optim_supply_chain.sql`** calcula los siguientes KPIs:
 
-- **% SLA Cumplido** → pedidos entregados dentro de 48 horas.  
-- **Tiempo de Ciclo Promedio** → horas entre orden y entrega.  
-- **Costo Logístico Unitario** → costo de despacho promedio por pedido.  
-- **Rotación de Inventario** → unidades vendidas vs stock promedio.  
+- **% SLA Cumplido** = pedidos entregados dentro de 48 horas.  
+- **Tiempo de Ciclo Promedio** = horas entre orden y entrega.  
+- **Costo Logístico Unitario** = costo de despacho promedio por pedido.  
+- **Rotación de Inventario** = unidades vendidas vs stock promedio.  
 
 El query está diseñado para ejecutarse en **Google BigQuery**, pero puede adaptarse a otros motores SQL.
 
