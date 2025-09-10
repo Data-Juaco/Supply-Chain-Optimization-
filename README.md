@@ -70,9 +70,9 @@ SUM([shipping_cost]) / COUNT([order_id])
 
 ### Parámetros y filtros recomendados
 
-* **Rango de fechas** → seleccionar periodo de análisis.
-* **Canal** → filtrar por Retail, E-commerce, Wholesale, etc.
-* **Centro logístico** → comparación entre CLRM01, CLRM02, CLRM03.
+* **Rango de fechas** = seleccionar periodo de análisis.
+* **Canal** = filtrar por Retail, E-commerce, Wholesale, etc.
+* **Centro logístico** = comparación entre CLRM01, CLRM02, CLRM03.
 
 ### Algunas sugerencias de diseño
 
